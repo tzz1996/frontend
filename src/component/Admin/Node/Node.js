@@ -163,12 +163,14 @@ export default function Node() {
         if (status === 1) {
             return (
                 <Chip
+                    key="status_disabled"
                     className={classes.disabledBadge}
                     size="small"
                     label={t("disabled")}
                 />
             );
         }
+        return null;
     };
 
     const getFeatureBadge = (node) =>
@@ -176,6 +178,7 @@ export default function Node() {
             if (node[feature.field]) {
                 return (
                     <Chip
+                        key={feature.field}
                         className={classes.disabledBadge}
                         size="small"
                         color="primary"
@@ -183,6 +186,7 @@ export default function Node() {
                     />
                 );
             }
+            return null;
         });
 
     const getRealStatusBadge = (status) =>

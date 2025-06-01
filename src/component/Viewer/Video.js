@@ -22,7 +22,7 @@ import { useTranslation } from "react-i18next";
 
 const Artplayer = React.lazy(() =>
     import(
-        /* webpackChunkName: "artplayer" */ "artplayer/examples/react/Artplayer"
+        /* webpackChunkName: "artplayer" */ "artplayer"
     )
 );
 

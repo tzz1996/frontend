@@ -27,7 +27,7 @@ const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpack
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
 const eslint = require('eslint');
 const CopyPlugin = require('copy-webpack-plugin');
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+// const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 const crypto = require("crypto");
 const crypto_orig_createHash = crypto.createHash;
 crypto.createHash = (algorithm) =>
@@ -272,6 +272,9 @@ module.exports = function(webpackEnv) {
                 }
               : false,
           },
+          cssProcessorPluginOptions: {
+            preset: ['default', { minifyFontValues: { removeQuotes: false } }],
+          },
         }),
       ],
       // Automatically split vendor and commons
@@ -391,13 +394,23 @@ module.exports = function(webpackEnv) {
             // The preset includes JSX, Flow, TypeScript, and some ESnext features.
             {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
-              include: paths.appSrc,
+              include: [
+                paths.appSrc,
+                /node_modules\/monaco-editor/,
+              ],
               loader: require.resolve('babel-loader'),
               options: {
                 customize: require.resolve(
                   'babel-preset-react-app/webpack-overrides'
                 ),
-                
+                presets: [
+                  [
+                    require.resolve('babel-preset-react-app'),
+                    {
+                      runtime: 'automatic',
+                    },
+                  ],
+                ],
                 plugins: [
                   [
                     require.resolve('babel-plugin-named-asset-import'),
@@ -410,12 +423,9 @@ module.exports = function(webpackEnv) {
                       },
                     },
                   ],
+                  '@babel/plugin-proposal-numeric-separator',
                 ],
-                // This is a feature of `babel-loader` for webpack (not Babel itself).
-                // It enables caching results in ./node_modules/.cache/babel-loader/
-                // directory for faster rebuilds.
                 cacheDirectory: true,
-                // See #6846 for context on why cacheCompression is disabled
                 cacheCompression: false,
                 compact: isEnvProduction,
               },
@@ -535,10 +545,10 @@ module.exports = function(webpackEnv) {
     },
     plugins: [
       // Monaco 代码编辑器
-      new MonacoWebpackPlugin({
-        // available options are documented at https://github.com/Microsoft/monaco-editor-webpack-plugin#options
-        languages: ['json',"php","bat","cpp","csharp","css","dockerfile","go","html","ini","java","javascript","less","lua","shell","sql","xml","yaml","python"]
-      }),
+      // new MonacoWebpackPlugin({
+      //   languages: ['javascript', 'typescript', 'html', 'css', 'json', 'markdown'],
+      //   features: ['!gotoSymbol'],
+      // }),
       // 写入版本文件
       new CopyPlugin([
         {
@@ -703,8 +713,10 @@ module.exports = function(webpackEnv) {
             '!**/src/setupTests.*',
           ],
           silent: true,
-          // The formatter is invoked directly in WebpackDevServerUtils during development
-          formatter: isEnvProduction ? typescriptFormatter : undefined,
+          // The formatter is referenced directly instead of read in the options
+          // to avoid incompatibilities with TypeScript in non-Yarn PnP mode
+          // see https://github.com/facebook/create-react-app/pull/8036
+          formatter: typescriptFormatter,
         }),
     ].filter(Boolean),
     // Some libraries import Node modules but don't use them in the browser.

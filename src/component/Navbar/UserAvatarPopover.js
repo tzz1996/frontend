@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import {
     AccountArrowRight,
     AccountPlus,
-    DesktopMacDashboard,
+    ViewDashboard,
     HomeAccount,
     LogoutVariant,
 } from "mdi-material-ui";
@@ -219,7 +219,7 @@ class UserAvatarPopoverCompoment extends Component {
                                     }}
                                 >
                                     <ListItemIcon>
-                                        <DesktopMacDashboard />
+                                        <ViewDashboard />
                                     </ListItemIcon>
                                     {t("navbar.dashboard")}
                                 </MenuItem>
