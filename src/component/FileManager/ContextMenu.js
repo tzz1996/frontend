@@ -218,9 +218,10 @@ class ContextMenuCompoment extends Component {
     };
 
     enterFolder = () => {
-        this.props.navigateTo(
-            pathJoin([this.props.path, this.props.selected[0].name])
-        );
+        const targetPath = this.props.selected[0].path === "/" 
+            ? "/" + this.props.selected[0].name 
+            : this.props.selected[0].path + "/" + this.props.selected[0].name;
+        this.props.navigateTo(targetPath);
     };
 
     // 暂时只对空白处右键菜单使用这个函数，疑似有bug会导致的一个菜单被默认选中。
