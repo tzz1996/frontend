@@ -218,9 +218,12 @@ class ContextMenuCompoment extends Component {
     };
 
     enterFolder = () => {
+        console.log("props.path:", this.props.path);
+        console.log("selected:", this.props.selected[0]);
         const targetPath = this.props.selected[0].path === "/" 
             ? "/" + this.props.selected[0].name 
             : this.props.selected[0].path + "/" + this.props.selected[0].name;
+        console.log("targetPath:", targetPath);
         this.props.navigateTo(targetPath);
     };
 
